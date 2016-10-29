@@ -7,7 +7,7 @@ namespace BoardGames.Search
     {
         private readonly IElasticClient _client;
         private readonly IBoardGameCsvReader _boardGameCsvReader;
-        private const string IndexName = "games";
+        public const string IndexName = "games";
 
         public SearchIndexBuilder(IElasticClient client, IBoardGameCsvReader boardGameCsvReader)
         {
