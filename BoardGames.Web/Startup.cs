@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using BoardGames.Search;
+using Nest;
+using System;
 
 namespace BoardGames.Web
 {
@@ -29,6 +28,17 @@ namespace BoardGames.Web
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddTransient<ISearchIndexBuilder, SearchIndexBuilder>();
+            services.AddTransient<IBoardGameCsvRowMapper, BoardGameCsvRowMapper>();
+            services.AddTransient<IBoardGameCsvReader, BoardGameCsvReader>();
+            services.AddTransient<IElasticClient>(s =>
+            {
+                var node = new Uri("http://localhost:9201");
+                var settings = new Nest.ConnectionSettings(node);
+
+                return new ElasticClient(settings);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
