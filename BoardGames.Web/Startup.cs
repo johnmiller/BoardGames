@@ -32,6 +32,8 @@ namespace BoardGames.Web
             services.AddTransient<ISearchIndexBuilder, SearchIndexBuilder>();
             services.AddTransient<IBoardGameCsvRowMapper, BoardGameCsvRowMapper>();
             services.AddTransient<IBoardGameCsvReader, BoardGameCsvReader>();
+            services.AddTransient<ISearchResultsMapper, SearchResultsMapper>();
+            services.AddTransient<ISearcher, Searcher>();
             services.AddTransient<IElasticClient>(s =>
             {
                 var node = new Uri("http://localhost:9201");

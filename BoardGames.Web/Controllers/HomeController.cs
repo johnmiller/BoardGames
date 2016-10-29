@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BoardGames.Search;
 
@@ -10,15 +6,19 @@ namespace BoardGames.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ISearchIndexBuilder _searchIndexBuilder;
+        private readonly ISearcher _searcher;
 
-        public HomeController(ISearchIndexBuilder searchIndexBuilder)
+        public HomeController(ISearchIndexBuilder searchIndexBuilder, ISearcher searcher)
         {
             _searchIndexBuilder = searchIndexBuilder;
+            _searcher = searcher;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(SearchCriteria criteria)
         {
-            return View();
+            var results = _searcher.Search(criteria);
+
+            return View(results);
         }
 
         public IActionResult RebuildIndexes()
@@ -26,20 +26,6 @@ namespace BoardGames.Web.Controllers
             _searchIndexBuilder.RebuildIndexes();
 
             return Content("Success!");
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
         }
 
         public IActionResult Error()

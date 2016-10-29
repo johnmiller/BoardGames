@@ -1,0 +1,31 @@
+﻿using Nest;
+
+namespace BoardGames.Search
+{
+    public class Searcher : ISearcher
+    {
+        private readonly IElasticClient _client;
+        private readonly ISearchResultsMapper _searchResultsMapper;
+
+        public Searcher(IElasticClient client, ISearchResultsMapper searchResultsMapper)
+        {
+            _client = client;
+            _searchResultsMapper = searchResultsMapper;
+        }
+
+        public SearchResults Search(SearchCriteria criteria)
+        {
+            var results = _client.Search<BoardGame>(x => x
+                    .From(0)
+                    .Take(50)
+                    .Query(q => q
+                        .QueryString(qs => qs
+                            .Query(criteria.SearchText)
+                            .Fields(fields => fields
+                                .Field(f => f.Name))))
+            );
+
+            return _searchResultsMapper.Map(criteria, results);
+        }
+    }
+}
