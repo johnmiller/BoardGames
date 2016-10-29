@@ -4,7 +4,9 @@
     "debugType": "portable"
   },
   "dependencies": {
-     "NETStandard.Library": "1.6.0"
+    "CsvHelper": "2.16.3",
+    "NEST": "2.4.6",
+    "NETStandard.Library": "1.6.0"
   },
   "frameworks": {
     "netstandard1.6": {
