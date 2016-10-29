@@ -1,71 +1,45 @@
 ﻿using System;
-using System.IO;
-using CsvHelper;
 using Nest;
 
 namespace BoardGames.Search
 {
     public class SearchIndexBuilder : ISearchIndexBuilder
     {
+        private readonly IElasticClient _client;
+        private readonly IBoardGameCsvReader _boardGameCsvReader;
         private const string IndexName = "games";
+
+        public SearchIndexBuilder(IElasticClient client, IBoardGameCsvReader boardGameCsvReader)
+        {
+            _client = client;
+            _boardGameCsvReader = boardGameCsvReader;
+        }
 
         public void RebuildIndexes()
         {
-            var client = CreateClient();
-            BuildIndexes(client);
-            PopulateGames(client);
+            BuildIndexes();
+            PopulateGames();
         }
 
-        private IElasticClient CreateClient()
+        private void BuildIndexes()
         {
-            var node = new Uri("http://localhost:9201");
-            var settings = new Nest.ConnectionSettings(node);
+            if (_client.IndexExists(IndexName).Exists)
+                _client.DeleteIndex(IndexName);
 
-            return new ElasticClient(settings);
-        }
-
-        private void BuildIndexes(IElasticClient client)
-        {
-            if (client.IndexExists(IndexName).Exists)
-                client.DeleteIndex(IndexName);
-
-            client.CreateIndex(IndexName, indexDescriptor => indexDescriptor
+            _client.CreateIndex(IndexName, indexDescriptor => indexDescriptor
                 .Settings(s => s
                     .NumberOfShards(1)
                     .NumberOfReplicas(0))
                 .Mappings(mappings => mappings
                     .Map<BoardGame>(mapper => mapper.AutoMap())));
 
-            client.Map<BoardGame>(mapper => mapper.Index(IndexName).AutoMap());
+            _client.Map<BoardGame>(mapper => mapper.Index(IndexName).AutoMap());
         }
 
-        private void PopulateGames(IElasticClient client)
+        private void PopulateGames()
         {
-            using (var reader = File.OpenText(@"../boardgames-sample.csv"))
-            using (var csv = new CsvReader(reader))
-            {
-
-                while (csv.Read())
-                    client.Index(Map(csv), idx => idx.Index(IndexName));
-            }
-
-        }
-
-        private BoardGame Map(CsvReader csv)
-        {
-            return new BoardGame
-            {
-                Id = csv.GetField<long>("id"),
-                GameType = csv.GetField<string>("type"),
-                Name = csv.GetField<string>("name"),
-                YearPublished = csv.GetField<int?>("yearpublished"),
-                MinPlayers = csv.GetField<int?>("minplayers"),
-                MaxPlayers = csv.GetField<int?>("maxplayers"),
-                PlayingTime = csv.GetField<int?>("playingtime"),
-                MinAge = csv.GetField<int?>("minage"),
-                AverageRating = csv.GetField<decimal?>("average_rating"),
-                TotalOwners = csv.GetField<int?>("total_owners")
-            };
+            foreach (var boardgame in _boardGameCsvReader.Read())
+                _client.Index(boardgame, idx => idx.Index(IndexName));
         }
     }
 }
