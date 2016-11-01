@@ -9,7 +9,7 @@
       },
       "CsvHelper": "2.16.3",
     "dotnet-test-xunit": "1.0.0-rc2-192208-24",
-    "NEST": "2.4.6",
+    "NEST": "5.0.0-rc1",
     "NSubstitute": "2.0.0-rc",
     "System.Runtime.Serialization.Primitives": "4.1.1",
     "xunit": "2.1.0"

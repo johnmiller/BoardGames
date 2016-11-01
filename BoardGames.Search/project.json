@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "CsvHelper": "2.16.3",
-    "NEST": "2.4.6",
+    "NEST": "5.0.0-rc1",
     "NETStandard.Library": "1.6.0"
   },
   "frameworks": {

@@ -26,7 +26,7 @@
       "type": "platform"
     },
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
-    "NEST": "2.4.6"
+    "NEST": "5.0.0-rc1"
   },
   "tools": {
     "BundlerMinifier.Core": "2.0.238",

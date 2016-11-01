@@ -38,7 +38,7 @@ namespace BoardGames.Web
             {
                 var node = new Uri("http://localhost:9201");
                 var settings = new Nest.ConnectionSettings(node);
-
+                settings.DefaultIndex("games");
                 return new ElasticClient(settings);
             });
         }
