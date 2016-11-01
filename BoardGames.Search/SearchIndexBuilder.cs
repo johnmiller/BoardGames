@@ -1,5 +1,4 @@
-﻿using System;
-using Nest;
+﻿using Nest;
 
 namespace BoardGames.Search
 {
@@ -41,9 +40,7 @@ namespace BoardGames.Search
             var batches = _boardGameCsvReader.Read().Batch(1000);
 
             foreach (var batch in batches)
-            {
                 _client.IndexMany(batch, IndexName);
-            }
         }
     }
 }

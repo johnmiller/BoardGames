@@ -10,28 +10,42 @@
 
     <div class="panel panel-info aggregation-container">
       <div class="panel-heading">
-        <h3 class="panel-title">Filter 1</h3>
+        <h3 class="panel-title">Game Type</h3>
       </div>
       <div class="panel-body list-group">
         <ul>
-@*          @foreach (var item in Model.)*@
-@*          {*@
-@*              <li>@item.Description (@item.Count)</li>*@
-@*          }*@
+          @foreach (var item in Model.GameTypeFilters)
+          {
+              <li>@item.Description (@item.Count)</li>
+          }
         </ul>
       </div>
     </div>
 
     <div class="panel panel-info aggregation-container">
       <div class="panel-heading">
-        <h3 class="panel-title">Filter 2</h3>
+        <h3 class="panel-title">Age</h3>
       </div>
       <div class="panel-body list-group">
         <ul>
-@*          @foreach (var item in Model.)*@
-@*          {*@
-@*              <li>@item.Description (@item.Count)</li>*@
-@*          }*@
+          @foreach (var item in Model.AgeFilters)
+          {
+              <li>@item.Description (@item.Count)</li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel panel-info aggregation-container">
+      <div class="panel-heading">
+        <h3 class="panel-title">Playing Time</h3>
+      </div>
+      <div class="panel-body list-group">
+        <ul>
+          @foreach (var item in Model.PlayingTimeFilters)
+          {
+              <li>@item.Description (@item.Count)</li>
+          }
         </ul>
       </div>
     </div>

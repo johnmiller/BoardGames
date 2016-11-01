@@ -18,6 +18,13 @@ namespace BoardGames.Search
             var results = _client.Search<BoardGame>(x => x
                     .From(0)
                     .Take(50)
+                    .Aggregations(a => a
+                        .Terms("age", ts => ts
+                            .Field(f => f.MinAge))
+                        .Terms("playing_time", ts => ts
+                            .Field(f => f.PlayingTime))
+                        .Terms("game_type", ts => ts
+                            .Field(f => f.GameType)))
                     .Query(q => q
                         .QueryString(qs => qs
                             .Query(criteria.SearchText)
