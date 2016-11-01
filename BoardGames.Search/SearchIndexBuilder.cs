@@ -38,8 +38,12 @@ namespace BoardGames.Search
 
         private void PopulateGames()
         {
-            foreach (var boardgame in _boardGameCsvReader.Read())
-                _client.Index(boardgame, idx => idx.Index(IndexName));
+            var batches = _boardGameCsvReader.Read().Batch(1000);
+
+            foreach (var batch in batches)
+            {
+                _client.IndexMany(batch, IndexName);
+            }
         }
     }
 }
