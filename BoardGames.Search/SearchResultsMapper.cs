@@ -1,4 +1,6 @@
-﻿using Nest;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Nest;
 
 namespace BoardGames.Search
 {
@@ -10,8 +12,19 @@ namespace BoardGames.Search
             {
                 Criteria = criteria,
                 Items = boardGameResults.Documents,
-                TotalMatches = boardGameResults.Total
+                TotalMatches = boardGameResults.Total,
+                GameTypeFilters = FilterList(boardGameResults, "game_type"),
+                AgeFilters = FilterList(boardGameResults, "age"),
+                PlayingTimeFilters = FilterList(boardGameResults, "playing_time")
             };
+        }
+
+        private IEnumerable<FacetItem> FilterList(ISearchResponse<BoardGame> boardGameResults, string term)
+        {
+            return boardGameResults.Aggs
+                .Terms(term)
+                .Buckets
+                .Select(x => new FacetItem{Description = x.Key.ToString(), Count = x.DocCount ?? 0});
         }
     }
 }

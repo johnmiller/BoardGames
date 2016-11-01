@@ -10,7 +10,14 @@ namespace BoardGames.Search
     {
         public long Id { get; set; }
 
-        public string GameType { get; set; }
+        public int GameTypeId
+        {
+            get { return GameType.Id; }
+            set{ GameType = GameType.Find(value); }
+        }
+
+        [Object(Ignore = true)]
+        public GameType GameType { get; set; }
 
         public string Name { get; set; }
 

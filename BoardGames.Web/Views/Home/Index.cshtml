@@ -4,76 +4,44 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row">
-  <div class="col-md-3">
-    <h2>Filters</h2>
-
-    <div class="panel panel-info aggregation-container">
-      <div class="panel-heading">
-        <h3 class="panel-title">Filter 1</h3>
-      </div>
-      <div class="panel-body list-group">
-        <ul>
-@*          @foreach (var item in Model.)*@
-@*          {*@
-@*              <li>@item.Description (@item.Count)</li>*@
-@*          }*@
-        </ul>
-      </div>
-    </div>
-
-    <div class="panel panel-info aggregation-container">
-      <div class="panel-heading">
-        <h3 class="panel-title">Filter 2</h3>
-      </div>
-      <div class="panel-body list-group">
-        <ul>
-@*          @foreach (var item in Model.)*@
-@*          {*@
-@*              <li>@item.Description (@item.Count)</li>*@
-@*          }*@
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-9">
-    <h2>Formulas</h2>
-    <form class="form-horizontal" method="GET" action="/">
-      <div class="form-group">
-        <div class="col-sm-12">
-          @Html.TextBoxFor(x => x.Criteria.SearchText, new {placeholder= "Search"})
-        </div>
-      </div>
-    </form>
-    Found <span class="badge">@Model.TotalMatches</span> Results
-    <table class="table table-striped">
-      <thead>
-      <th></th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Year</th>
-      <th>Min Players</th>
-      <th>Max Players</th>
-      <th>Time</th>
-      <th>Age</th>
-      <th>Rating</th>
-      <th>Owners</th>
-      </thead>
-      @foreach(var formula in Model.Items)
-      {
-          <tr>
-            <td>@formula.Id</td>
-            <td>@formula.Name</td>
-            <td>@formula.GameType</td>
-            <td>@formula.YearPublished</td>
-            <td>@formula.MinPlayers</td>
-            <td>@formula.MaxPlayers</td>
-            <td>@formula.PlayingTime</td>
-            <td>@formula.MinAge</td>
-            <td>@formula.AverageRating</td>
-            <td>@formula.TotalOwners</td>
-          </tr>
-      }
-    </table>
-  </div>
+<div id="search-page">
+ @Html.Partial("_Search")
 </div>
+
+@section scripts
+{
+  <script type="text/javascript">
+
+      $(function() {
+          $(document).on('keypress', '#search-text', function(e) {
+              if (e.keyCode == 13)
+                search();
+          });
+
+          $(document).on('click', '.aggregation-container :checkbox', search);
+      });
+
+      function search() {
+          var searchCriteria = {
+               SearchText: $('#search-text').val(),
+               SelectedGameTypes: selectedFilters('SelectedGameTypes')
+          };
+
+          $.ajax({
+              url: '/Home/Search',
+              type: "POST",
+              data: JSON.stringify(searchCriteria),
+              contentType: "application/json; charset=UTF-8"
+          })
+          .success(function(response) {
+              $('#search-page').html(response);
+          });
+      }
+
+      function selectedFilters(filterName) {
+          return $('[name=' + filterName + ']:checked').map(function() {
+              return this.value;
+            }).get();
+      }
+  </script>
+}

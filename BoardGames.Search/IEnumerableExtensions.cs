@@ -13,11 +13,10 @@ namespace BoardGames.Search
             {
                 batch.Add(item);
 
-                if (batch.Count == batchSize)
-                {
-                    yield return batch;
-                    batch = new List<TSource>();
-                }
+                if (batch.Count != batchSize) continue;
+
+                yield return batch;
+                batch = new List<TSource>();
             }
 
             if (batch.Any())

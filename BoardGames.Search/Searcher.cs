@@ -1,4 +1,7 @@
-﻿using Nest;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Nest;
 
 namespace BoardGames.Search
 {
@@ -16,14 +19,27 @@ namespace BoardGames.Search
         public SearchResults Search(SearchCriteria criteria)
         {
             var results = _client.Search<BoardGame>(x => x
-                    .From(0)
-                    .Take(50)
+                    .Aggregations(a => a
+                        .Terms("age", ts => ts
+                            .Field(f => f.MinAge)
+                            .Order(TermsOrder.TermAscending))
+                        .Terms("playing_time", ts => ts
+                            .Field(f => f.PlayingTime)
+                            .Order(TermsOrder.TermAscending))
+                        .Terms("game_type", ts => ts
+                            .Field(f => f.GameTypeId)
+                            .Order(TermsOrder.TermAscending)))
                     .Query(q => q
-                        .QueryString(qs => qs
-                            .Query(criteria.SearchText)
-                            .Fields(fields => fields
-                                .Field(f => f.Name))))
-            );
+                        .MultiMatch(m => m
+                            .Fields(fields => fields.Field(f => f.Name))
+                            .Operator(Operator.And)
+                            .Query(criteria.SearchText)))
+//                    .PostFilter(pf => pf
+//                        .Terms(t => t
+//                            .Field(f => f.GameType)
+//                            .Terms(criteria.SelectedGameTypes)))
+                    .From(0)
+                    .Take(50));
 
             return _searchResultsMapper.Map(criteria, results);
         }
