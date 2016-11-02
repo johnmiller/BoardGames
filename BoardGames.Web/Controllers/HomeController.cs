@@ -16,9 +16,20 @@ namespace BoardGames.Web.Controllers
 
         public IActionResult Index(SearchCriteria criteria)
         {
+            if (criteria == null)
+                criteria = new SearchCriteria();
+
             var results = _searcher.Search(criteria);
 
             return View(results);
+        }
+
+        [HttpPost]
+        public IActionResult Search([FromBody] SearchCriteria criteria)
+        {
+            var results = _searcher.Search(criteria);
+
+            return PartialView("_Search", results);
         }
 
         public IActionResult RebuildIndexes()
