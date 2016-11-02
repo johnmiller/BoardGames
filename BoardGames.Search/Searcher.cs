@@ -21,11 +21,14 @@ namespace BoardGames.Search
             var results = _client.Search<BoardGame>(x => x
                     .Aggregations(a => a
                         .Terms("age", ts => ts
-                            .Field(f => f.MinAge))
+                            .Field(f => f.MinAge)
+                            .Order(TermsOrder.TermAscending))
                         .Terms("playing_time", ts => ts
-                            .Field(f => f.PlayingTime))
+                            .Field(f => f.PlayingTime)
+                            .Order(TermsOrder.TermAscending))
                         .Terms("game_type", ts => ts
-                            .Field(f => f.GameType)))
+                            .Field(f => f.GameType)
+                            .Order(TermsOrder.TermAscending)))
                     .Query(q => q
                         .MultiMatch(m => m
                             .Fields(fields => fields.Field(f => f.Name))
