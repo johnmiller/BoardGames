@@ -14,8 +14,8 @@ namespace BoardGames.Search
                 Items = boardGameResults.Documents,
                 TotalMatches = boardGameResults.Total,
                 GameTypeFilters = FilterList(boardGameResults, "game_type"),
-                PlayingTimeFilters = FilterList(boardGameResults, "playing_time"),
-                AgeFilters = FilterList(boardGameResults, "age")
+                AgeFilters = FilterList(boardGameResults, "age"),
+                PlayingTimeFilters = FilterList(boardGameResults, "playing_time")
             };
         }
 
@@ -24,7 +24,7 @@ namespace BoardGames.Search
             return boardGameResults.Aggs
                 .Terms(term)
                 .Buckets
-                .Select(x => new FacetItem{Description = x.Key, Count = x.DocCount ?? 0});
+                .Select(x => new FacetItem{Description = x.Key.ToString(), Count = x.DocCount ?? 0});
         }
     }
 }

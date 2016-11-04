@@ -22,12 +22,10 @@
       });
 
       function search() {
-          var searchText = $('#search-text').val();
-          var selectedGameTypes = $('[name=SelectedGameTypes]:checked').map(function() {
-              return this.value;
-            }).get();
-
-          var searchCriteria = { SearchText: searchText, SelectedGameTypes: selectedGameTypes };
+          var searchCriteria = {
+               SearchText: $('#search-text').val(),
+               SelectedGameTypes: selectedFilters('SelectedGameTypes')
+          };
 
           $.ajax({
               url: '/Home/Search',
@@ -38,6 +36,12 @@
           .success(function(response) {
               $('#search-page').html(response);
           });
+      }
+
+      function selectedFilters(filterName) {
+          return $('[name=' + filterName + ']:checked').map(function() {
+              return this.value;
+            }).get();
       }
   </script>
 }

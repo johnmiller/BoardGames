@@ -27,17 +27,17 @@ namespace BoardGames.Search
                             .Field(f => f.PlayingTime)
                             .Order(TermsOrder.TermAscending))
                         .Terms("game_type", ts => ts
-                            .Field(f => f.GameType)
+                            .Field(f => f.GameTypeId)
                             .Order(TermsOrder.TermAscending)))
                     .Query(q => q
                         .MultiMatch(m => m
                             .Fields(fields => fields.Field(f => f.Name))
                             .Operator(Operator.And)
                             .Query(criteria.SearchText)))
-                    .PostFilter(pf => pf
-                        .Terms(t => t
-                            .Field(f => f.GameType)
-                            .Terms(criteria.SelectedGameTypes)))
+//                    .PostFilter(pf => pf
+//                        .Terms(t => t
+//                            .Field(f => f.GameType)
+//                            .Terms(criteria.SelectedGameTypes)))
                     .From(0)
                     .Take(50));
 
