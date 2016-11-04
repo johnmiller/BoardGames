@@ -19,7 +19,7 @@
                   type="checkbox"
                   name="SelectedGameTypes"
                   @Html.Raw(isChecked ? " checked=checked " : "")
-                  value="@item.Description"> @item.Description (@item.Count)
+                  value="@item.Value"> @item.Description (@item.Count)
               </li>
           }
 
