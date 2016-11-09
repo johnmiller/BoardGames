@@ -12,7 +12,7 @@
         <ul>
           @foreach (var item in Model.GameTypeFilters)
           {
-              var isChecked = Model.Criteria.SelectedGameTypes.Contains(item.Description);
+              var isChecked = Model.Criteria.SelectedGameTypes.Contains(Int32.Parse(item.Value));
 
               <li>
                 <input
@@ -35,7 +35,15 @@
         <ul>
           @foreach (var item in Model.AgeFilters)
           {
-              <li>@item.Description (@item.Count)</li>
+              var isChecked = Model.Criteria.SelectedAges.Contains(Int32.Parse(item.Value));
+
+              <li>
+                <input
+                  type="checkbox"
+                  name="SelectedAges"
+                  @Html.Raw(isChecked ? " checked=checked " : "")
+                  value="@item.Value"> @item.Description (@item.Count)
+              </li>
           }
         </ul>
       </div>
@@ -49,7 +57,15 @@
         <ul>
           @foreach (var item in Model.PlayingTimeFilters)
           {
-              <li>@item.Description (@item.Count)</li>
+              var isChecked = Model.Criteria.SelectedPlayingTimes.Contains(Int32.Parse(item.Value));
+
+              <li>
+                <input
+                  type="checkbox"
+                  name="SelectedPlayingTimes"
+                  @Html.Raw(isChecked ? " checked=checked " : "")
+                  value="@item.Value"> @item.Description (@item.Count)
+              </li>
           }
         </ul>
       </div>

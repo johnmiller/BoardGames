@@ -37,7 +37,7 @@ namespace BoardGames.Search
 
         private void PopulateGames()
         {
-            var batches = _boardGameCsvReader.Read().Batch(1000);
+            var batches = _boardGameCsvReader.Read().Batch(5000);
 
             foreach (var batch in batches)
                 _client.IndexMany(batch, IndexName);

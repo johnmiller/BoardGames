@@ -29,7 +29,8 @@ namespace BoardGames.Search
                     Value = x.Key,
                     Description = GameType.Find(int.Parse(x.Key)).Description,
                     Count = x.DocCount ?? 0
-                });
+                })
+                .OrderBy(x => int.Parse(x.Value));
         }
 
         private IEnumerable<FacetItem> FilterList(ISearchResponse<BoardGame> boardGameResults, string term)
@@ -37,7 +38,8 @@ namespace BoardGames.Search
             return boardGameResults.Aggs
                 .Terms(term)
                 .Buckets
-                .Select(x => new FacetItem{Value = x.Key, Description = x.Key, Count = x.DocCount ?? 0});
+                .Select(x => new FacetItem{Value = x.Key, Description = x.Key, Count = x.DocCount ?? 0})
+                .OrderBy(x => int.Parse(x.Value));
         }
     }
 }

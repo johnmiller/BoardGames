@@ -22,22 +22,31 @@ namespace BoardGames.Search
                     .Aggregations(a => a
                         .Terms("age", ts => ts
                             .Field(f => f.MinAge)
-                            .Order(TermsOrder.TermAscending))
+                            .Size(50))
                         .Terms("playing_time", ts => ts
                             .Field(f => f.PlayingTime)
-                            .Order(TermsOrder.TermAscending))
+                            .Size(50))
                         .Terms("game_type", ts => ts
                             .Field(f => f.GameTypeId)
-                            .Order(TermsOrder.TermAscending)))
+                            .Size(50)))
                     .Query(q => q
                         .MultiMatch(m => m
                             .Fields(fields => fields.Field(f => f.Name))
                             .Operator(Operator.And)
                             .Query(criteria.SearchText)))
-//                    .PostFilter(pf => pf
-//                        .Terms(t => t
-//                            .Field(f => f.GameType)
-//                            .Terms(criteria.SelectedGameTypes)))
+                    .PostFilter(pf => pf
+                        .Bool(b => b
+                            .Must(m => m
+                                .Terms(t => t
+                                    .Field(f => f.GameTypeId)
+                                    .Terms(criteria.SelectedGameTypes)), m => m
+                                .Terms(t => t
+                                    .Field(f => f.MinAge)
+                                    .Terms(criteria.SelectedAges)), m => m
+                                .Terms(t => t
+                                    .Field(f => f.PlayingTime)
+                                    .Terms(criteria.SelectedPlayingTimes)))
+                    ))
                     .From(0)
                     .Take(50));
 
